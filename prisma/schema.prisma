@@ -46,6 +46,7 @@ model Order {
   paymentMethod   String   // bkash or nagad
   transactionId   String
   screenshot      String?  // Optional payment screenshot URL
+  purchasePrice   Float    // Price at time of purchase
   
   // Order Status
   status          String   @default("pending") // pending, approved, rejected

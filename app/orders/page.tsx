@@ -16,6 +16,7 @@ interface Order {
   transactionId: string
   paymentMethod: string
   status: string
+  purchasePrice: number
   createdAt: string
   adminNotes?: string
   product: {
@@ -179,7 +180,7 @@ export default function OrdersPage() {
                   </div>
                   <div>
                     <p className="text-gray-400 dark:text-gray-400 light:text-gray-700 font-medium mb-1">Amount Paid</p>
-                    <p className="font-semibold text-primary text-lg">৳{order.product.price}</p>
+                    <p className="font-semibold text-primary text-lg">৳{order.purchasePrice}</p>
                   </div>
                 </div>
 

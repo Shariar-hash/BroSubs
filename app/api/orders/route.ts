@@ -25,6 +25,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Fetch the current product price
+    const product = await prisma.product.findUnique({
+      where: { id: productId }
+    })
+
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+    }
+
     const order = await prisma.order.create({
       data: {
         productId,
@@ -34,6 +43,7 @@ export async function POST(request: Request) {
         password,
         paymentMethod,
         transactionId,
+        purchasePrice: product.price, // Store the price at time of purchase
         status: 'pending',
         ...(userId && { userId }),
       }

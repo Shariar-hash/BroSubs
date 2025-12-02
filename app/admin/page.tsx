@@ -23,6 +23,7 @@ interface Order {
   transactionId: string
   paymentMethod: string
   status: string
+  purchasePrice: number
   createdAt: string
   product: {
     name: string
@@ -278,7 +279,7 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-semibold">{order.product.name}</p>
-                        <p className="text-sm text-gray-400">৳{order.product.price}</p>
+                        <p className="text-sm text-gray-400">৳{order.purchasePrice}</p>
                       </td>
                       <td className="px-6 py-4">
                         <span className="inline-block px-2 py-1 bg-primary/20 text-primary text-xs rounded">
