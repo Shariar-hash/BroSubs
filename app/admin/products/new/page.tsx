@@ -178,9 +178,9 @@ export default function NewProductPage() {
                 value={formData.image}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
-                placeholder="chatgpt, gemini, perplexity, claude, midjourney, chatgpt-goto"
+                placeholder="chatgpt, chatgpt-goto, gemini, perplexity, claude, midjourney"
               />
-              <p className="text-xs text-gray-400 mt-1">Enter logo name from /public/logos folder</p>
+              <p className="text-xs text-gray-400 mt-1">Use: chatgpt | chatgpt-goto | gemini | perplexity | claude | midjourney</p>
             </div>
           </div>
 

@@ -89,7 +89,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Product Info */}
         <div className="p-6 flex-1 flex flex-col">
           <div className="mb-3">
-            <h3 className="text-2xl font-bold dark:text-white light:text-gray-900 group-hover:text-gradient transition-all">
+            <h3 className="text-2xl font-bold dark:text-white light:text-gray-900 group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:via-purple-500 group-hover:to-blue-500 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
               {product.name}
             </h3>
             {product.duration && (

@@ -219,9 +219,9 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                 value={formData.image}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-gray-50 border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900"
-                placeholder="chatgpt, gemini, perplexity, claude, midjourney, chatgpt-goto"
+                placeholder="chatgpt, chatgpt-goto, gemini, perplexity, claude, midjourney"
               />
-              <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">Enter logo name from /public/logos folder</p>
+              <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">Use: chatgpt | chatgpt-goto | gemini | perplexity | claude | midjourney</p>
             </div>
           </div>
 
