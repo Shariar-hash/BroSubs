@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Dark Mode (Default) */
+body {
+  @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white transition-colors duration-300;
+}
+
+/* Light Mode */
+.light body {
+  @apply bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900;
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
+  }
+  
+  /* Light mode text colors - Force visibility */
+  .light .text-gray-400 {
+    @apply text-gray-600 !important;
+  }
+  
+  .light .text-gray-300 {
+    @apply text-gray-900 !important;
+  }
+  
+  /* Light mode icon colors */
+  .light svg {
+    @apply text-gray-900;
+  }
+  
+  /* Light mode backgrounds */
+  .light .bg-gray-800 {
+    @apply bg-white;
+  }
+  
+  .light .bg-gray-900 {
+    @apply bg-gray-50;
+  }
+  
+  .light .bg-gray-800\/50 {
+    @apply bg-white/80;
+  }
+  
+  .light .bg-gray-800\/30 {
+    @apply bg-gray-100/80;
+  }
+
+  .light .bg-gray-700 {
+    @apply bg-gray-200;
+  }
+  
+  /* Light mode borders */
+  .light .border-gray-700 {
+    @apply border-gray-300;
+  }
+  
+  .light .border-gray-800 {
+    @apply border-gray-200;
+  }
+
+  .light .border-gray-700\/50 {
+    @apply border-gray-200;
+  }
+}

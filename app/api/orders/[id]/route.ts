@@ -1,0 +1,43 @@
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+
+// GET single order
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id: params.id },
+      include: { product: true }
+    })
+
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+    }
+
+    return NextResponse.json(order)
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch order' }, { status: 500 })
+  }
+}
+
+// PUT update order status (admin only)
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+    const { status, adminNotes } = body
+
+    const order = await prisma.order.update({
+      where: { id: params.id },
+      data: { status, adminNotes }
+    })
+
+    return NextResponse.json(order)
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to update order' }, { status: 500 })
+  }
+}
