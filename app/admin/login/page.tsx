@@ -100,14 +100,6 @@ export default function AdminLogin() {
               {loading ? 'Logging in...' : 'Login to Dashboard'}
             </button>
           </form>
-
-          <div className="mt-6 p-4 bg-primary/10 border border-primary/30 rounded-lg">
-            <p className="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600">
-              <strong>Admin Credentials:</strong><br />
-              Email: fahimsifat12345@gmail.com<br />
-              Password: Tracdi@123
-            </p>
-          </div>
         </motion.div>
 
         <p className="text-center text-gray-400 dark:text-gray-400 light:text-gray-600 text-sm mt-6">
