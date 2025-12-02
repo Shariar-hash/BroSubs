@@ -12,7 +12,7 @@ interface Product {
   price: number
   originalPrice?: number
   duration?: string
-  category: string
+  category: string | string[]
   status: string
   isFeatured?: boolean
   discountEndTime?: Date | string | null
@@ -31,6 +31,8 @@ export default function Home() {
     try {
       const res = await fetch('/api/products')
       const data = await res.json()
+      console.log('Home - Products received:', data)
+      console.log('Home - Is array?', Array.isArray(data))
       setProducts(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch products:', error)

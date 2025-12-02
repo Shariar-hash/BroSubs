@@ -39,7 +39,8 @@ export async function PUT(
       status, 
       image,
       isFeatured,
-      discountEndTime
+      discountEndTime,
+      plans
     } = body
 
     const product = await prisma.product.update({
@@ -56,6 +57,7 @@ export async function PUT(
         image: image || null,
         isFeatured: isFeatured || false,
         discountEndTime: discountEndTime ? new Date(discountEndTime) : null,
+        ...(plans && { plans: plans }),
       }
     })
 

@@ -15,14 +15,18 @@ model Product {
   name           String
   description    String
   features       String[] // Array of feature points
-  price          Float
+  price          Float    // Default/main price (can be monthly)
   originalPrice  Float?   // Original price before discount
   duration       String?  // e.g., "1 month", "1 year"
   image          String?
-  category       String
+  category       String[] // Array of categories - can have multiple
   status         String   @default("active") // active, coming_soon
   isFeatured     Boolean  @default(false)
   discountEndTime DateTime? // When the discount expires
+  
+  // Multiple subscription plans
+  plans          Json?    // Array of {duration: string, price: number, originalPrice?: number}
+  
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   orders         Order[]
@@ -47,6 +51,7 @@ model Order {
   transactionId   String
   screenshot      String?  // Optional payment screenshot URL
   purchasePrice   Float    // Price at time of purchase
+  selectedPlan    String?  // Duration plan selected (e.g., "1 month", "1 year")
   
   // Order Status
   status          String   @default("pending") // pending, approved, rejected

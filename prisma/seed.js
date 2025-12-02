@@ -27,14 +27,18 @@ async function main() {
       originalPrice: 399,
       price: 299,
       duration: '1 month',
-      category: 'AI Assistant',
+      category: ['AI Tools', 'AI - Chatbot'],
       status: 'active',
       isFeatured: true,
       discountEndTime: discountEndTime,
-      image: 'chatgpt'
+      image: 'Chatgpt Pro.png',
+      plans: [
+        { duration: '1 month', price: 299, originalPrice: 399 },
+        { duration: '1 year', price: 2999, originalPrice: 4788 } // Save ~1500 TK
+      ]
     },
     {
-      name: 'Gemini Pro + Google Drive 2TB',
+      name: 'Gemini Advanced + Google Drive 2TB',
       description: 'Google\'s most capable AI with 2TB cloud storage included',
       features: [
         'Gemini Advanced AI',
@@ -46,11 +50,15 @@ async function main() {
       originalPrice: 799,
       price: 499,
       duration: '1 year',
-      category: 'AI Assistant',
+      category: ['AI Tools', 'AI - Chatbot', 'Cloud Storage'],
       status: 'active',
-      isFeatured: false,
+      isFeatured: true,
       discountEndTime: discountEndTime,
-      image: 'gemini'
+      image: 'Gemni.png',
+      plans: [
+        { duration: '1 month', price: 599, originalPrice: 799 },
+        { duration: '1 year', price: 5999, originalPrice: 9588 } // Save ~3500 TK
+      ]
     },
     {
       name: 'Perplexity Pro',
@@ -62,14 +70,17 @@ async function main() {
         'File Upload & Analysis',
         '12 Months Access'
       ],
-      originalPrice: 799,
-      price: 499,
+      originalPrice: 699,
+      price: 449,
       duration: '12 months',
-      category: 'AI Search',
+      category: ['AI Tools', 'AI - Research'],
       status: 'active',
       isFeatured: false,
       discountEndTime: discountEndTime,
-      image: 'perplexity'
+      image: 'Perplexity Pro.png',
+      plans: [
+        { duration: '1 year', price: 4499, originalPrice: 6999 } // Annual only
+      ]
     },
     {
       name: 'ChatGPT GOTO',
@@ -81,46 +92,62 @@ async function main() {
         'Custom Instructions',
         '1 Year Subscription'
       ],
-      originalPrice: 499,
-      price: 349,
+      originalPrice: 599,
+      price: 399,
       duration: '1 year',
-      category: 'AI Assistant',
+      category: ['AI Tools', 'AI - Chatbot'],
       status: 'active',
       isFeatured: false,
       discountEndTime: discountEndTime,
-      image: 'chatgpt-goto'
+      image: 'Chatgpt Goto.png',
+      plans: [
+        { duration: '1 year', price: 3999, originalPrice: 5999 } // Annual only
+      ]
     },
     {
       name: 'Claude Pro',
-      description: 'Anthropic\'s advanced AI assistant - Coming Soon',
+      description: 'Anthropic\'s advanced AI assistant with superior reasoning capabilities',
       features: [
         'Claude 3 Opus Access',
-        'Extended Context Window',
-        'Priority Access',
-        'Advanced Reasoning',
-        'Document Analysis'
+        'Extended Context Window (200K tokens)',
+        'Priority Access During Peak Times',
+        'Advanced Reasoning & Analysis',
+        'Document Analysis & Summarization'
       ],
-      price: 0,
-      category: 'AI Assistant',
-      status: 'coming_soon',
+      originalPrice: 399,
+      price: 299,
+      duration: '1 month',
+      category: ['AI Tools', 'AI - Chatbot'],
+      status: 'active',
       isFeatured: false,
-      image: 'claude'
+      discountEndTime: discountEndTime,
+      image: 'claude pro.png',
+      plans: [
+        { duration: '1 month', price: 299, originalPrice: 399 },
+        { duration: '1 year', price: 2999, originalPrice: 4788 } // Save ~1500 TK
+      ]
     },
     {
       name: 'Midjourney Pro',
-      description: 'Professional AI image generation - Coming Soon',
+      description: 'Professional AI image generation with unlimited access',
       features: [
         'Unlimited Generations',
         'Fast Mode Access',
         'Commercial License',
         'Stealth Mode',
-        'Maximum Resolution'
+        'Maximum Resolution Output'
       ],
-      price: 0,
-      category: 'AI Image',
-      status: 'coming_soon',
+      originalPrice: 899,
+      price: 599,
+      duration: '1 month',
+      category: ['AI Tools', 'AI - Image Generation', 'Design'],
+      status: 'active',
       isFeatured: false,
-      image: 'midjourney'
+      discountEndTime: discountEndTime,
+      image: 'midjourney.png',
+      plans: [
+        { duration: '1 month', price: 599, originalPrice: 899 }
+      ]
     }
   ]
 

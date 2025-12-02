@@ -32,9 +32,6 @@ export default function Navbar() {
             <Link href="/#about" className="text-gray-300 hover:text-primary transition-colors font-medium">
               About
             </Link>
-            <Link href="/admin/login" className="text-gray-300 hover:text-primary transition-colors font-medium">
-              Admin
-            </Link>
           </div>
 
           {/* Auth Buttons & Theme Toggle */}

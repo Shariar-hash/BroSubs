@@ -24,6 +24,7 @@ interface Order {
   paymentMethod: string
   status: string
   purchasePrice: number
+  selectedPlan?: string
   createdAt: string
   product: {
     name: string
@@ -35,7 +36,7 @@ interface Product {
   id: string
   name: string
   price: number
-  category: string
+  category: string | string[]
   status: string
 }
 
@@ -47,14 +48,19 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [showAddProduct, setShowAddProduct] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // Check authentication
-    const isAuthenticated = sessionStorage.getItem('adminAuth')
-    if (!isAuthenticated) {
+    const adminAuth = sessionStorage.getItem('adminAuth')
+    if (!adminAuth) {
       router.push('/admin/login')
       return
     }
+    
+    setIsAuthenticated(true)
+    setIsLoading(false)
 
     // Check if user session exists (Google OAuth)
     // If user is signed in with Google, logout admin
@@ -98,9 +104,12 @@ export default function AdminDashboard() {
     try {
       const res = await fetch('/api/products')
       const data = await res.json()
-      setProducts(data)
+      console.log('Admin - Products received:', data)
+      console.log('Admin - Is array?', Array.isArray(data))
+      setProducts(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch products:', error)
+      setProducts([])
     }
   }
 
@@ -138,6 +147,23 @@ export default function AdminDashboard() {
     } catch (error) {
       toast.error('Failed to delete product')
     }
+  }
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (redirecting)
+  if (!isAuthenticated) {
+    return null
   }
 
   return (
@@ -279,7 +305,10 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-semibold">{order.product.name}</p>
-                        <p className="text-sm text-gray-400">৳{order.purchasePrice}</p>
+                        <p className="text-sm text-gray-400">
+                          ৳{order.purchasePrice}
+                          {order.selectedPlan && <span className="ml-1">/ {order.selectedPlan}</span>}
+                        </p>
                       </td>
                       <td className="px-6 py-4">
                         <span className="inline-block px-2 py-1 bg-primary/20 text-primary text-xs rounded">
@@ -343,7 +372,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
+              {Array.isArray(products) && products.map((product) => (
                 <div key={product.id} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -356,7 +385,11 @@ export default function AdminDashboard() {
                       {product.status}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-400 mb-4">{product.category}</p>
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {(Array.isArray(product.category) ? product.category : [product.category]).map((cat, idx) => (
+                      <span key={idx} className="text-xs text-gray-400 bg-gray-700/30 px-2 py-1 rounded">{cat}</span>
+                    ))}
+                  </div>
                   <div className="flex space-x-2">
                     <Link
                       href={`/admin/products/edit/${product.id}`}

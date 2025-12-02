@@ -13,11 +13,16 @@ interface Product {
   price: number
   originalPrice?: number
   duration?: string
-  category: string
+  category: string | string[]
   status: string
   isFeatured?: boolean
   discountEndTime?: Date | string | null
   image?: string
+  plans?: Array<{
+    duration: string
+    price: number
+    originalPrice?: number
+  }>
 }
 
 interface ProductCardProps {
@@ -52,6 +57,18 @@ const calculateDiscount = (original?: number, current?: number) => {
 export default function ProductCard({ product }: ProductCardProps) {
   const isComingSoon = product.status === 'coming_soon'
   const discount = calculateDiscount(product.originalPrice, product.price)
+
+  // If plans exist, use the cheapest plan for display
+  const displayPrice = product.plans && product.plans.length > 0 
+    ? Math.min(...product.plans.map(p => p.price))
+    : product.price
+  
+  const displayOriginalPrice = product.plans && product.plans.length > 0
+    ? product.plans.find(p => p.price === displayPrice)?.originalPrice
+    : product.originalPrice
+
+  const displayDiscount = calculateDiscount(displayOriginalPrice, displayPrice)
+  const hasMultiplePlans = product.plans && product.plans.length > 1
 
   const cardContent = (
     <motion.div
@@ -116,19 +133,29 @@ export default function ProductCard({ product }: ProductCardProps) {
               {!isComingSoon ? (
                 <>
                   <div className="flex items-baseline gap-2 mb-2">
-                    {product.originalPrice && (
+                    {displayOriginalPrice && (
                       <span className="text-xl font-bold dark:text-gray-400 light:text-gray-500 line-through">
-                        ৳{product.originalPrice}
+                        ৳{displayOriginalPrice}
                       </span>
                     )}
-                    <span className="text-3xl font-bold text-primary">
-                      ৳{product.price}
-                    </span>
+                    <div className="flex items-baseline gap-1">
+                      {hasMultiplePlans && (
+                        <span className="text-lg font-semibold text-gray-400">from</span>
+                      )}
+                      <span className="text-3xl font-bold text-primary">
+                        ৳{displayPrice}
+                      </span>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {discount > 0 && (
+                    {displayDiscount > 0 && (
                       <span className="text-xs bg-green-500/20 text-green-500 px-2 py-1 rounded-full font-semibold">
-                        {discount}% OFF
+                        {displayDiscount}% OFF
+                      </span>
+                    )}
+                    {hasMultiplePlans && (
+                      <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full font-semibold">
+                        Multiple Plans
                       </span>
                     )}
                   </div>
@@ -161,9 +188,13 @@ export default function ProductCard({ product }: ProductCardProps) {
 
             {/* Category Badge */}
             <div className="mt-4 pt-4 border-t border-gray-700 dark:border-gray-700 light:border-gray-300">
-              <span className="inline-block px-3 py-1 bg-gray-700/50 dark:bg-gray-700/50 light:bg-gray-200 text-gray-300 dark:text-gray-300 light:text-gray-800 text-xs rounded-full">
-                {product.category}
-              </span>
+              <div className="flex flex-wrap gap-2">
+                {(Array.isArray(product.category) ? product.category : [product.category]).map((cat, idx) => (
+                  <span key={idx} className="inline-block px-3 py-1 bg-gray-700/50 dark:bg-gray-700/50 light:bg-gray-200 text-gray-300 dark:text-gray-300 light:text-gray-800 text-xs rounded-full">
+                    {cat}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

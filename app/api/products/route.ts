@@ -7,8 +7,10 @@ export async function GET() {
     const products = await prisma.product.findMany({
       orderBy: { createdAt: 'desc' }
     })
+    console.log('API - Found products:', products.length, products)
     return NextResponse.json(products)
   } catch (error) {
+    console.error('API - Error fetching products:', error)
     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 })
   }
 }
@@ -28,7 +30,8 @@ export async function POST(request: Request) {
       status, 
       image,
       isFeatured,
-      discountEndTime
+      discountEndTime,
+      plans
     } = body
 
     const product = await prisma.product.create({
@@ -44,6 +47,7 @@ export async function POST(request: Request) {
         image: image || null,
         isFeatured: isFeatured || false,
         discountEndTime: discountEndTime ? new Date(discountEndTime) : null,
+        ...(plans && { plans: plans }),
       }
     })
 

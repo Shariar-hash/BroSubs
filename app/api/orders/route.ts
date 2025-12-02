@@ -18,14 +18,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { productId, fullName, phone, email, password, paymentMethod, transactionId, userId } = body
+    const { productId, fullName, phone, email, password, paymentMethod, transactionId, userId, purchasePrice, selectedPlan } = body
 
     // Validate required fields
     if (!productId || !fullName || !phone || !email || !paymentMethod || !transactionId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Fetch the current product price
+    // Fetch the current product to fallback if purchasePrice not provided
     const product = await prisma.product.findUnique({
       where: { id: productId }
     })
@@ -43,7 +43,8 @@ export async function POST(request: Request) {
         password,
         paymentMethod,
         transactionId,
-        purchasePrice: product.price, // Store the price at time of purchase
+        purchasePrice: purchasePrice || product.price, // Use provided price or fallback to product price
+        selectedPlan: selectedPlan || product.duration || null, // Store selected plan duration
         status: 'pending',
         ...(userId && { userId }),
       }

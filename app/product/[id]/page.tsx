@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Check, Clock, Shield, Zap, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import PurchaseForm from '@/components/PurchaseForm'
 import CountdownTimer from '@/components/CountdownTimer'
-import { ChatGPTIcon, GeminiIcon, PerplexityIcon, ClaudeIcon, MidjourneyIcon, ChatGPTGotoIcon } from '@/components/ProductIcons'
 
 interface Product {
   id: string
@@ -16,17 +16,24 @@ interface Product {
   price: number
   originalPrice?: number
   duration?: string
-  category: string
+  category: string | string[]
   status: string
   isFeatured?: boolean
   discountEndTime?: Date | string | null
   image?: string
+  plans?: Array<{
+    duration: string
+    price: number
+    originalPrice?: number
+  }>
 }
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [showPurchaseForm, setShowPurchaseForm] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState<number>(0)
+  const [imageError, setImageError] = useState(false)
 
   useEffect(() => {
     fetchProduct()
@@ -88,18 +95,29 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             transition={{ duration: 0.5 }}
           >
             {/* Product Image */}
-            <div className={`rounded-2xl h-96 flex items-center justify-center mb-8 border ${
+            <div className={`rounded-2xl h-96 flex items-center justify-center mb-8 border overflow-hidden ${
               product.isFeatured 
                 ? 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-400 dark:border-yellow-500'
                 : 'bg-gradient-to-br from-primary/20 to-secondary/20 border-gray-700 dark:border-gray-700 light:border-gray-200'
             }`}>
-              {product.image === 'chatgpt' ? <ChatGPTIcon className="w-48 h-48" /> :
-               product.image === 'chatgpt-goto' ? <ChatGPTGotoIcon className="w-48 h-48" /> :
-               product.image === 'gemini' ? <GeminiIcon className="w-48 h-48" /> :
-               product.image === 'perplexity' ? <PerplexityIcon className="w-48 h-48" /> :
-               product.image === 'claude' ? <ClaudeIcon className="w-48 h-48" /> :
-               product.image === 'midjourney' ? <MidjourneyIcon className="w-48 h-48" /> :
-               <div className="text-9xl">🤖</div>}
+              {product.image && !imageError ? (
+                <div className="relative w-full h-full flex items-center justify-center p-8">
+                  <Image 
+                    src={`/logos/${product.image}`}
+                    alt={product.name}
+                    width={384}
+                    height={384}
+                    className="object-contain max-w-full max-h-full"
+                    onError={() => {
+                      console.error(`Failed to load image: /logos/${product.image}`)
+                      setImageError(true)
+                    }}
+                    unoptimized
+                  />
+                </div>
+              ) : (
+                <div className="text-9xl">🤖</div>
+              )}
             </div>
 
             {/* What You'll Get */}
@@ -137,10 +155,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           >
             {/* Product Header */}
             <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="inline-block px-3 py-1 bg-primary/20 text-primary text-sm font-semibold rounded-full">
-                  {product.category}
-                </span>
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
+                {(Array.isArray(product.category) ? product.category : [product.category]).map((cat, idx) => (
+                  <span key={idx} className="inline-block px-3 py-1 bg-primary/20 text-primary text-sm font-semibold rounded-full">
+                    {cat}
+                  </span>
+                ))}
                 {product.isFeatured && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold rounded-full">
                     <Sparkles className="w-3 h-3" />
@@ -154,24 +174,87 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               {/* Price */}
               {product.status !== 'coming_soon' && (
                 <div className="mb-8">
-                  <div className="flex items-baseline gap-3 mb-2">
-                    {product.originalPrice && (
-                      <span className="text-3xl font-bold text-gray-400 dark:text-gray-500 line-through">
-                        ৳{product.originalPrice}
-                      </span>
-                    )}
-                    <span className="text-5xl font-bold text-primary">৳{product.price}</span>
-                  </div>
-                  <div className="flex items-center gap-3 mb-4">
-                    {product.originalPrice && (
-                      <span className="inline-block px-4 py-2 bg-green-500/20 text-green-500 font-bold rounded-lg">
-                        Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% • ৳{product.originalPrice - product.price} OFF
-                      </span>
-                    )}
-                    {product.duration && (
-                      <span className="text-xl text-gray-400">/{product.duration}</span>
-                    )}
-                  </div>
+                  {/* Plan Selection */}
+                  {product.plans && product.plans.length > 0 ? (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold mb-4">Choose Your Plan</h3>
+                      <div className="grid grid-cols-1 gap-3">
+                        {product.plans.map((plan, index) => {
+                          const discount = plan.originalPrice 
+                            ? Math.round(((plan.originalPrice - plan.price) / plan.originalPrice) * 100)
+                            : 0
+                          
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => setSelectedPlan(index)}
+                              className={`relative p-4 rounded-xl border-2 transition-all text-left ${
+                                selectedPlan === index
+                                  ? 'border-primary bg-primary/10'
+                                  : 'border-gray-700 hover:border-gray-600'
+                              }`}
+                            >
+                              {discount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                  {discount}% OFF
+                                </span>
+                              )}
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="font-bold text-lg">{plan.duration}</div>
+                                  <div className="flex items-baseline gap-2 mt-1">
+                                    {plan.originalPrice && (
+                                      <span className="text-sm text-gray-400 line-through">
+                                        ৳{plan.originalPrice}
+                                      </span>
+                                    )}
+                                    <span className="text-2xl font-bold text-primary">
+                                      ৳{plan.price}
+                                    </span>
+                                  </div>
+                                  {plan.originalPrice && (
+                                    <div className="text-xs text-green-500 font-semibold mt-1">
+                                      Save ৳{plan.originalPrice - plan.price}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                  selectedPlan === index
+                                    ? 'border-primary bg-primary'
+                                    : 'border-gray-600'
+                                }`}>
+                                  {selectedPlan === index && (
+                                    <Check className="w-4 h-4 text-white" />
+                                  )}
+                                </div>
+                              </div>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex items-baseline gap-3 mb-2">
+                        {product.originalPrice && (
+                          <span className="text-3xl font-bold text-gray-400 dark:text-gray-500 line-through">
+                            ৳{product.originalPrice}
+                          </span>
+                        )}
+                        <span className="text-5xl font-bold text-primary">৳{product.price}</span>
+                      </div>
+                      <div className="flex items-center gap-3 mb-4">
+                        {product.originalPrice && (
+                          <span className="inline-block px-4 py-2 bg-green-500/20 text-green-500 font-bold rounded-lg">
+                            Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% • ৳{product.originalPrice - product.price} OFF
+                          </span>
+                        )}
+                        {product.duration && (
+                          <span className="text-xl text-gray-400">/{product.duration}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   
                   {/* Countdown Timer */}
                   {product.discountEndTime && (
@@ -225,13 +308,27 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               onClick={() => setShowPurchaseForm(true)}
               className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-2xl"
             >
-              Buy Now - ৳{product.price} {product.originalPrice && (
-                <span className="line-through text-sm opacity-75 ml-2">৳{product.originalPrice}</span>
+              {product.plans && product.plans.length > 0 ? (
+                <>
+                  Buy Now - ৳{product.plans[selectedPlan].price} {product.plans[selectedPlan].originalPrice && (
+                    <span className="line-through text-sm opacity-75 ml-2">৳{product.plans[selectedPlan].originalPrice}</span>
+                  )}
+                </>
+              ) : (
+                <>
+                  Buy Now - ৳{product.price} {product.originalPrice && (
+                    <span className="line-through text-sm opacity-75 ml-2">৳{product.originalPrice}</span>
+                  )}
+                </>
               )}
             </button>
-            {product.originalPrice && (
+            {((product.plans && product.plans[selectedPlan].originalPrice) || product.originalPrice) && (
               <p className="text-center text-sm text-green-500 font-semibold mt-2">
-                🎉 Limited Time Offer - Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% Today!
+                🎉 Limited Time Offer - Save {
+                  product.plans && product.plans.length > 0
+                    ? Math.round(((product.plans[selectedPlan].originalPrice! - product.plans[selectedPlan].price) / product.plans[selectedPlan].originalPrice!) * 100)
+                    : Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+                }% Today!
               </p>
             )}
 
@@ -261,6 +358,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       {showPurchaseForm && (
         <PurchaseForm
           product={product}
+          selectedPlan={product.plans && product.plans.length > 0 ? product.plans[selectedPlan] : undefined}
           onClose={() => setShowPurchaseForm(false)}
         />
       )}

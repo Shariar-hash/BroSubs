@@ -12,12 +12,19 @@ interface Product {
   price: number
 }
 
+interface SubscriptionPlan {
+  duration: string
+  price: number
+  originalPrice?: number
+}
+
 interface PurchaseFormProps {
   product: Product
+  selectedPlan?: SubscriptionPlan
   onClose: () => void
 }
 
-export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
+export default function PurchaseForm({ product, selectedPlan, onClose }: PurchaseFormProps) {
   const { data: session } = useSession()
   const [formData, setFormData] = useState({
     fullName: session?.user?.name || '',
@@ -28,6 +35,10 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
     transactionId: '',
   })
   const [submitting, setSubmitting] = useState(false)
+
+  // Use selected plan price or fallback to product price
+  const finalPrice = selectedPlan ? selectedPlan.price : product.price
+  const planDuration = selectedPlan ? selectedPlan.duration : undefined
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,6 +52,8 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
           ...formData,
           productId: product.id,
           userId: (session?.user as any)?.id || null,
+          purchasePrice: finalPrice,
+          selectedPlan: planDuration,
         }),
       })
 
@@ -85,7 +98,10 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
           <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-6 flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Complete Your Purchase</h2>
-              <p className="text-gray-400 text-sm mt-1">{product.name} - ৳{product.price}/month</p>
+              <p className="text-gray-400 text-sm mt-1">
+                {product.name} - ৳{finalPrice}
+                {planDuration && <span className="text-primary ml-1">/ {planDuration}</span>}
+              </p>
             </div>
             <button
               onClick={onClose}

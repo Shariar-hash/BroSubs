@@ -2,9 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
+
+interface SubscriptionPlan {
+  duration: string
+  price: number
+  originalPrice?: number
+}
 
 export default function EditProductPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -15,12 +21,15 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     price: '',
     originalPrice: '',
     duration: '',
-    category: 'AI Tools',
+    category: [] as string[],
     status: 'active',
     image: '',
     isFeatured: false,
     discountEndTime: '',
   })
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([
+    { duration: '1 month', price: 0, originalPrice: 0 }
+  ])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
@@ -40,12 +49,23 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
         price: data.price.toString(),
         originalPrice: data.originalPrice?.toString() || '',
         duration: data.duration || '',
-        category: data.category,
+        category: Array.isArray(data.category) ? data.category : [data.category],
         status: data.status,
         image: data.image || '',
         isFeatured: data.isFeatured || false,
         discountEndTime: data.discountEndTime ? new Date(data.discountEndTime).toISOString().slice(0, 16) : '',
       })
+
+      // Load existing plans or create default
+      if (data.plans && Array.isArray(data.plans) && data.plans.length > 0) {
+        setPlans(data.plans)
+      } else {
+        setPlans([{ 
+          duration: data.duration || '1 month', 
+          price: data.price || 0, 
+          originalPrice: data.originalPrice || 0 
+        }])
+      }
     } catch (error) {
       toast.error('Failed to load product')
     } finally {
@@ -72,6 +92,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
           price: parseFloat(formData.price),
           originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
           discountEndTime: formData.discountEndTime ? new Date(formData.discountEndTime).toISOString() : null,
+          plans: plans.length > 0 ? plans : null,
         }),
       })
 
@@ -96,6 +117,35 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     })
+  }
+
+  const handleCategoryChange = (category: string) => {
+    setFormData(prev => ({
+      ...prev,
+      category: prev.category.includes(category)
+        ? prev.category.filter(c => c !== category)
+        : [...prev.category, category]
+    }))
+  }
+
+  const addPlan = () => {
+    setPlans([...plans, { duration: '', price: 0, originalPrice: 0 }])
+  }
+
+  const removePlan = (index: number) => {
+    if (plans.length > 1) {
+      setPlans(plans.filter((_, i) => i !== index))
+    }
+  }
+
+  const updatePlan = (index: number, field: keyof SubscriptionPlan, value: string | number) => {
+    const newPlans = [...plans]
+    if (field === 'duration') {
+      newPlans[index][field] = value as string
+    } else {
+      newPlans[index][field] = typeof value === 'string' ? parseFloat(value) || 0 : value
+    }
+    setPlans(newPlans)
   }
 
   if (loading) {
@@ -179,30 +229,37 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Category *</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
-              >
-                <option value="AI Tools">AI Tools</option>
-                <option value="AI - Chatbot">AI - Chatbot</option>
-                <option value="AI - Image Generation">AI - Image Generation</option>
-                <option value="AI - Code Assistant">AI - Code Assistant</option>
-                <option value="AI - Research">AI - Research</option>
-                <option value="Cloud Storage">Cloud Storage</option>
-                <option value="Productivity">Productivity</option>
-                <option value="Design">Design</option>
-                <option value="Video Editing">Video Editing</option>
-                <option value="Music & Audio">Music & Audio</option>
-                <option value="Development Tools">Development Tools</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Education">Education</option>
-                <option value="VPN & Security">VPN & Security</option>
-                <option value="Other">Other</option>
-              </select>
+              <label className="block text-sm font-medium mb-2">Categories * (Select multiple)</label>
+              <div className="grid grid-cols-2 gap-3 p-4 bg-gray-800 border border-gray-700 rounded-lg max-h-64 overflow-y-auto">
+                {[
+                  'AI Tools',
+                  'AI - Chatbot',
+                  'AI - Image Generation',
+                  'AI - Code Assistant',
+                  'AI - Research',
+                  'Cloud Storage',
+                  'Productivity',
+                  'Design',
+                  'Video Editing',
+                  'Music & Audio',
+                  'Development Tools',
+                  'Marketing',
+                  'Education',
+                  'VPN & Security',
+                  'Other'
+                ].map((cat) => (
+                  <label key={cat} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-700/50 p-2 rounded">
+                    <input
+                      type="checkbox"
+                      checked={formData.category.includes(cat)}
+                      onChange={() => handleCategoryChange(cat)}
+                      className="w-4 h-4 text-primary bg-gray-700 border-gray-600 rounded focus:ring-primary focus:ring-2"
+                    />
+                    <span className="text-sm">{cat}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-gray-400 mt-1">Select all categories that apply to this product</p>
             </div>
           </div>
 
@@ -292,6 +349,78 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   <span className="text-sm font-medium">Mark as Featured Product</span>
                 </label>
               </div>
+            </div>
+          </div>
+
+          {/* Subscription Plans Section */}
+          <div className="border-t border-gray-700 pt-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-primary">Subscription Plans</h3>
+              <button
+                type="button"
+                onClick={addPlan}
+                className="flex items-center space-x-2 text-sm bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Plan</span>
+              </button>
+            </div>
+            <p className="text-xs text-gray-400 mb-4">Create multiple pricing tiers (e.g., 1 month, 1 year). Leave empty to use default price/duration above.</p>
+
+            <div className="space-y-4">
+              {plans.map((plan, index) => (
+                <div key={index} className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-4">
+                    <span className="text-sm font-medium text-gray-300">Plan {index + 1}</span>
+                    {plans.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removePlan(index)}
+                        className="text-red-400 hover:text-red-300 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium mb-2 text-gray-400">Duration *</label>
+                      <input
+                        type="text"
+                        value={plan.duration}
+                        onChange={(e) => updatePlan(index, 'duration', e.target.value)}
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-primary transition-colors text-sm"
+                        placeholder="1 month, 1 year, etc."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-2 text-gray-400">Price (৳) *</label>
+                      <input
+                        type="number"
+                        value={plan.price || ''}
+                        onChange={(e) => updatePlan(index, 'price', e.target.value)}
+                        step="0.01"
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-primary transition-colors text-sm"
+                        placeholder="299"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-2 text-gray-400">Original Price (৳)</label>
+                      <input
+                        type="number"
+                        value={plan.originalPrice || ''}
+                        onChange={(e) => updatePlan(index, 'originalPrice', e.target.value)}
+                        step="0.01"
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-primary transition-colors text-sm"
+                        placeholder="399 (for discount)"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
