@@ -24,7 +24,7 @@ export function GeminiIcon({ className = "w-48 h-48" }: { className?: string }) 
   return (
     <div className={className}>
       <Image 
-        src="/logos/google drive + gemini .png" 
+        src="/logos/gemini.png" 
         alt="Gemini Pro" 
         width={256}
         height={256}
