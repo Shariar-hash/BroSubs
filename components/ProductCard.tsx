@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react'
-import { ChatGPTIcon, GeminiIcon, PerplexityIcon, ClaudeIcon, MidjourneyIcon, ChatGPTGotoIcon } from './ProductIcons'
+import Image from 'next/image'
 import CountdownTimer from './CountdownTimer'
 
 interface Product {
@@ -25,16 +25,23 @@ interface ProductCardProps {
 }
 
 const getProductIcon = (imageName?: string) => {
-  const iconClass = "w-full h-full p-4"
-  switch(imageName) {
-    case 'chatgpt': return <ChatGPTIcon className={iconClass} />
-    case 'chatgpt-goto': return <ChatGPTGotoIcon className={iconClass} />
-    case 'gemini': return <GeminiIcon className={iconClass} />
-    case 'perplexity': return <PerplexityIcon className={iconClass} />
-    case 'claude': return <ClaudeIcon className={iconClass} />
-    case 'midjourney': return <MidjourneyIcon className={iconClass} />
-    default: return <div className="text-6xl">🤖</div>
+  if (!imageName) {
+    return <div className="text-6xl">🤖</div>
   }
+  
+  return (
+    <Image 
+      src={`/logos/${imageName}`}
+      alt="Product Logo" 
+      width={256}
+      height={256}
+      className="w-full h-full object-contain scale-110"
+      onError={(e) => {
+        e.currentTarget.style.display = 'none'
+        e.currentTarget.insertAdjacentHTML('afterend', '<div class="text-6xl">🤖</div>')
+      }}
+    />
+  )
 }
 
 const calculateDiscount = (original?: number, current?: number) => {

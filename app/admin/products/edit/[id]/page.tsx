@@ -212,16 +212,16 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Image Name (Optional)</label>
+              <label className="block text-sm font-medium mb-2">Image File Name (Optional)</label>
               <input
                 type="text"
                 name="image"
                 value={formData.image}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-gray-50 border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900"
-                placeholder="chatgpt, chatgpt-goto, gemini, perplexity, claude, midjourney"
+                placeholder="gemini.png, Chatgpt Pro.png, claude pro.png"
               />
-              <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">Use: chatgpt | chatgpt-goto | gemini | perplexity | claude | midjourney</p>
+              <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">Enter exact filename from /public/logos/ (e.g., gemini.png, Perplexity Pro.png)</p>
             </div>
           </div>
 
