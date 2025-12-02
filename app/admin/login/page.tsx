@@ -21,10 +21,14 @@ export default function AdminLogin() {
     try {
       // Check credentials
       if (formData.email === 'fahimsifat12345@gmail.com' && formData.password === 'Tracdi@123') {
+        // Sign out any Google OAuth user first
+        await fetch('/api/auth/signout', { method: 'POST' })
+        
         // Store auth in session
         sessionStorage.setItem('adminAuth', 'true')
         toast.success('Login successful!')
         router.push('/admin')
+        router.refresh()
       } else {
         toast.error('Invalid email or password')
       }

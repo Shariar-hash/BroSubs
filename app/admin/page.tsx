@@ -55,6 +55,19 @@ export default function AdminDashboard() {
       return
     }
 
+    // Check if user session exists (Google OAuth)
+    // If user is signed in with Google, logout admin
+    const checkUserSession = async () => {
+      const res = await fetch('/api/auth/session')
+      const session = await res.json()
+      if (session?.user) {
+        sessionStorage.removeItem('adminAuth')
+        router.push('/')
+        return
+      }
+    }
+
+    checkUserSession()
     fetchStats()
     fetchOrders()
     fetchProducts()

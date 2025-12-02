@@ -72,7 +72,11 @@ export default function Navbar() {
                     />
                   )}
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => {
+                      // Clear admin session when signing out
+                      sessionStorage.removeItem('adminAuth')
+                      signOut()
+                    }}
                     className="flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-white"
                   >
                     <LogOut className="w-6 h-6" />
@@ -82,7 +86,11 @@ export default function Navbar() {
               </>
             ) : (
               <button
-                onClick={() => signIn('google')}
+                onClick={() => {
+                  // Clear admin session before signing in with Google
+                  sessionStorage.removeItem('adminAuth')
+                  signIn('google')
+                }}
                 className="flex items-center space-x-2 px-4 py-2 bg-primary hover:bg-primary/80 rounded-lg transition-colors text-white"
               >
                 <User className="w-6 h-6" />
