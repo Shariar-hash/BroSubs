@@ -230,7 +230,7 @@ export default function PurchaseForm({ product, selectedPlan, onClose }: Purchas
                 <div className="bg-primary/10 dark:bg-primary/10 light:bg-blue-50 border border-primary/30 dark:border-primary/30 light:border-blue-200 rounded-lg p-4">
                   <h4 className="font-semibold mb-2 text-primary">Payment Instructions:</h4>
                   <ol className="text-sm text-gray-300 dark:text-gray-300 light:text-gray-700 space-y-1 list-decimal list-inside">
-                    <li>Send ৳{product.price} to: <span className="font-bold text-white dark:text-white light:text-gray-900">+8801311130356</span></li>
+                    <li>Send ৳{product.price} to: <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 dark:from-purple-400 dark:via-pink-400 dark:to-red-400">+8801311130356</span></li>
                     <li>Use "{formData.paymentMethod === 'bkash' ? 'Bkash' : 'Nagad'}" Send Money</li>
                     <li>Copy the Transaction ID</li>
                     <li>Paste it in the field below</li>
