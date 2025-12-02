@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, Star, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles } from 'lucide-react'
 import { ChatGPTIcon, GeminiIcon, PerplexityIcon, ClaudeIcon, MidjourneyIcon, ChatGPTGotoIcon } from './ProductIcons'
 import CountdownTimer from './CountdownTimer'
 
@@ -88,21 +88,15 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Product Info */}
         <div className="p-6 flex-1 flex flex-col">
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <h3 className="text-2xl font-bold dark:text-white light:text-gray-900 group-hover:text-gradient transition-all">
-                {product.name}
-              </h3>
-              {product.duration && (
-                <p className="text-sm text-primary font-semibold mt-1">
-                  {product.duration}
-                </p>
-              )}
-            </div>
-            <div className="flex items-center space-x-1 text-yellow-400">
-              <Star className="w-4 h-4 fill-current" />
-              <span className="text-sm font-semibold">4.9</span>
-            </div>
+          <div className="mb-3">
+            <h3 className="text-2xl font-bold dark:text-white light:text-gray-900 group-hover:text-gradient transition-all">
+              {product.name}
+            </h3>
+            {product.duration && (
+              <p className="text-sm text-primary font-semibold mt-1">
+                {product.duration}
+              </p>
+            )}
           </div>
 
           <p className="text-gray-300 dark:text-gray-300 light:text-gray-700 mb-4 line-clamp-2">
