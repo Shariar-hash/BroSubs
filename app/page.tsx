@@ -79,13 +79,13 @@ export default function Home() {
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mb-12">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-400 light:text-gray-500 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Search for AI tools..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-700 rounded-xl focus:outline-none focus:border-primary transition-colors text-white"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-800/50 dark:bg-gray-800/50 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-xl focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
                 />
               </div>
             </div>

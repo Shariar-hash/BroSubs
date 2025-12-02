@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { productId, fullName, phone, email, password, paymentMethod, transactionId } = body
+    const { productId, fullName, phone, email, password, paymentMethod, transactionId, userId } = body
 
     // Validate required fields
     if (!productId || !fullName || !phone || !email || !paymentMethod || !transactionId) {
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
         paymentMethod,
         transactionId,
         status: 'pending',
+        ...(userId && { userId }),
       }
     })
 

@@ -50,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <motion.div
       whileHover={{ scale: isComingSoon ? 1 : 1.05, y: isComingSoon ? 0 : -5 }}
       transition={{ duration: 0.3 }}
-      className="relative group h-full"
+      className="relative group h-full min-h-[600px]"
     >
       {/* Featured Badge */}
       {product.isFeatured && (
@@ -78,10 +78,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Product Icon */}
-        <div className={`flex-1 flex items-center justify-center overflow-hidden ${
+        <div className={`h-72 flex items-center justify-center overflow-hidden ${
           product.isFeatured 
             ? 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20'
-            : 'bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20'
+            : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary/10 dark:to-secondary/10'
         }`}>
           {getProductIcon(product.image)}
         </div>
@@ -90,7 +90,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-start justify-between mb-3">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-gradient transition-all">
+              <h3 className="text-2xl font-bold dark:text-white light:text-gray-900 group-hover:text-gradient transition-all">
                 {product.name}
               </h3>
               {product.duration && (
@@ -105,18 +105,18 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+          <p className="text-gray-300 dark:text-gray-300 light:text-gray-700 mb-4 line-clamp-2">
             {product.description}
           </p>
 
-          <div className="mt-auto">
-            {!isComingSoon && (
-              <>
-                {/* Pricing */}
-                <div className="mb-4">
+          <div className="mt-auto flex flex-col">
+            {/* Pricing Section - Fixed Height */}
+            <div className="mb-4 min-h-[100px]">
+              {!isComingSoon ? (
+                <>
                   <div className="flex items-baseline gap-2 mb-2">
                     {product.originalPrice && (
-                      <span className="text-xl font-bold text-gray-400 dark:text-gray-500 line-through">
+                      <span className="text-xl font-bold dark:text-gray-400 light:text-gray-500 line-through">
                         ৳{product.originalPrice}
                       </span>
                     )}
@@ -131,16 +131,18 @@ export default function ProductCard({ product }: ProductCardProps) {
                       </span>
                     )}
                   </div>
-                </div>
+                </>
+              ) : (
+                <div className="h-full"></div>
+              )}
+            </div>
 
-                {/* Countdown Timer */}
-                {product.discountEndTime && (
-                  <div className="mb-4">
-                    <CountdownTimer endTime={new Date(product.discountEndTime)} />
-                  </div>
-                )}
-              </>
-            )}
+            {/* Countdown Timer Section - Fixed Height */}
+            <div className="mb-4 min-h-[60px]">
+              {!isComingSoon && product.discountEndTime && (
+                <CountdownTimer endTime={new Date(product.discountEndTime)} />
+              )}
+            </div>
 
             {/* View Details Button */}
             <div
@@ -157,8 +159,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
 
             {/* Category Badge */}
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 text-xs rounded-full">
+            <div className="mt-4 pt-4 border-t border-gray-700 dark:border-gray-700 light:border-gray-300">
+              <span className="inline-block px-3 py-1 bg-gray-700/50 dark:bg-gray-700/50 light:bg-gray-200 text-gray-300 dark:text-gray-300 light:text-gray-800 text-xs rounded-full">
                 {product.category}
               </span>
             </div>

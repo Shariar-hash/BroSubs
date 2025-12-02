@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, CreditCard, Phone, Mail, Lock, Upload } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 
 interface Product {
@@ -17,10 +18,11 @@ interface PurchaseFormProps {
 }
 
 export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
+  const { data: session } = useSession()
   const [formData, setFormData] = useState({
-    fullName: '',
+    fullName: session?.user?.name || '',
     phone: '',
-    email: '',
+    email: session?.user?.email || '',
     password: '',
     paymentMethod: 'bkash',
     transactionId: '',
@@ -38,6 +40,7 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
         body: JSON.stringify({
           ...formData,
           productId: product.id,
+          userId: (session?.user as any)?.id || null,
         }),
       })
 
@@ -107,7 +110,7 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     value={formData.fullName}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -123,7 +126,7 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
                     placeholder="01XXXXXXXXX"
                   />
                 </div>
@@ -139,10 +142,10 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
                     placeholder="your@email.com"
                   />
-                  <p className="text-xs text-gray-400 mt-1">This email will be used for the subscription</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">This email will be used for the subscription</p>
                 </div>
 
                 <div>
@@ -155,10 +158,10 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
                     placeholder="If you want us to set a password"
                   />
-                  <p className="text-xs text-gray-400 mt-1">Leave empty if not needed</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">Leave empty if not needed</p>
                 </div>
               </div>
             </div>
@@ -177,7 +180,7 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     <label className={`flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
                       formData.paymentMethod === 'bkash' 
                         ? 'border-primary bg-primary/10' 
-                        : 'border-gray-700 hover:border-gray-600'
+                        : 'border-gray-700 dark:border-gray-700 light:border-gray-300 hover:border-gray-600 dark:hover:border-gray-600 light:hover:border-gray-400'
                     }`}>
                       <input
                         type="radio"
@@ -192,7 +195,7 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     <label className={`flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
                       formData.paymentMethod === 'nagad' 
                         ? 'border-primary bg-primary/10' 
-                        : 'border-gray-700 hover:border-gray-600'
+                        : 'border-gray-700 dark:border-gray-700 light:border-gray-300 hover:border-gray-600 dark:hover:border-gray-600 light:hover:border-gray-400'
                     }`}>
                       <input
                         type="radio"
@@ -208,10 +211,10 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                 </div>
 
                 {/* Payment Instructions */}
-                <div className="bg-primary/10 border border-primary/30 rounded-lg p-4">
+                <div className="bg-primary/10 dark:bg-primary/10 light:bg-blue-50 border border-primary/30 dark:border-primary/30 light:border-blue-200 rounded-lg p-4">
                   <h4 className="font-semibold mb-2 text-primary">Payment Instructions:</h4>
-                  <ol className="text-sm text-gray-300 space-y-1 list-decimal list-inside">
-                    <li>Send ৳{product.price} to: <span className="font-bold text-white">+8801311130356</span></li>
+                  <ol className="text-sm text-gray-300 dark:text-gray-300 light:text-gray-700 space-y-1 list-decimal list-inside">
+                    <li>Send ৳{product.price} to: <span className="font-bold text-white dark:text-white light:text-gray-900">+8801311130356</span></li>
                     <li>Use "{formData.paymentMethod === 'bkash' ? 'Bkash' : 'Nagad'}" Send Money</li>
                     <li>Copy the Transaction ID</li>
                     <li>Paste it in the field below</li>
@@ -226,10 +229,10 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
                     value={formData.transactionId}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
                     placeholder="Enter your transaction ID"
                   />
-                  <p className="text-xs text-gray-400 mt-1">You'll receive this after completing payment</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-1">You'll receive this after completing payment</p>
                 </div>
               </div>
             </div>
@@ -243,7 +246,7 @@ export default function PurchaseForm({ product, onClose }: PurchaseFormProps) {
               >
                 {submitting ? 'Processing...' : `Submit Order - ৳${product.price}`}
               </button>
-              <p className="text-center text-xs text-gray-400 mt-4">
+              <p className="text-center text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 mt-4">
                 By submitting, you agree to our terms and conditions
               </p>
             </div>

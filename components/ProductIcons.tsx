@@ -8,9 +8,9 @@ export function ChatGPTIcon({ className = "w-48 h-48" }: { className?: string })
       <Image 
         src="/logos/Chatgpt Pro.png" 
         alt="ChatGPT Pro" 
-        width={192}
-        height={192}
-        className="w-full h-full object-cover rounded-lg"
+        width={256}
+        height={256}
+        className="w-full h-full object-contain scale-110"
         onError={(e) => {
           // Fallback to SVG if image fails
           e.currentTarget.style.display = 'none'
@@ -26,9 +26,9 @@ export function GeminiIcon({ className = "w-48 h-48" }: { className?: string }) 
       <Image 
         src="/logos/google drive + gemini .png" 
         alt="Gemini Pro" 
-        width={192}
-        height={192}
-        className="w-full h-full object-cover rounded-lg"
+        width={256}
+        height={256}
+        className="w-full h-full object-contain scale-110"
         onError={(e) => {
           e.currentTarget.style.display = 'none'
         }}
@@ -43,9 +43,9 @@ export function PerplexityIcon({ className = "w-48 h-48" }: { className?: string
       <Image 
         src="/logos/Perplexity Pro.png" 
         alt="Perplexity Pro" 
-        width={192}
-        height={192}
-        className="w-full h-full object-cover rounded-lg"
+        width={256}
+        height={256}
+        className="w-full h-full object-contain scale-110"
         onError={(e) => {
           e.currentTarget.style.display = 'none'
         }}
@@ -56,18 +56,18 @@ export function PerplexityIcon({ className = "w-48 h-48" }: { className?: string
 
 export function ClaudeIcon({ className = "w-48 h-48" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="claudeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{stopColor: '#D97757', stopOpacity: 1}} />
-          <stop offset="100%" style={{stopColor: '#CA6038', stopOpacity: 1}} />
-        </linearGradient>
-      </defs>
-      <rect width="100" height="100" rx="20" fill="url(#claudeGrad)"/>
-      <path d="M50 25 L65 40 L50 55 L35 40 Z" fill="white" opacity="0.9"/>
-      <path d="M50 45 L65 60 L50 75 L35 60 Z" fill="white" opacity="0.9"/>
-      <circle cx="50" cy="50" r="8" fill="white"/>
-    </svg>
+    <div className={className}>
+      <Image 
+        src="/logos/claude pro.png" 
+        alt="Claude Pro" 
+        width={256}
+        height={256}
+        className="w-full h-full object-contain scale-110"
+        onError={(e) => {
+          e.currentTarget.style.display = 'none'
+        }}
+      />
+    </div>
   )
 }
 
@@ -96,9 +96,9 @@ export function ChatGPTGotoIcon({ className = "w-48 h-48" }: { className?: strin
       <Image 
         src="/logos/Chatgpt Goto.png" 
         alt="ChatGPT GOTO" 
-        width={192}
-        height={192}
-        className="w-full h-full object-cover rounded-lg"
+        width={256}
+        height={256}
+        className="w-full h-full object-contain scale-110"
         onError={(e) => {
           e.currentTarget.style.display = 'none'
         }}

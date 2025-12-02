@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import { Toaster } from 'react-hot-toast'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { SessionProvider } from '@/components/SessionProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,15 +30,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
-          <div>
-            <Navbar />
-            <main className="min-h-screen">
-              {children}
-            </main>
-            <Toaster position="top-right" />
-          </div>
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider>
+            <div>
+              <Navbar />
+              <main className="min-h-screen">
+                {children}
+              </main>
+              <Toaster position="top-right" />
+            </div>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   )

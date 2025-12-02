@@ -16,6 +16,7 @@ interface Stats {
 
 interface Order {
   id: string
+  orderId: number
   fullName: string
   email: string
   phone: string
@@ -44,6 +45,7 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [showAddProduct, setShowAddProduct] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     // Check authentication
@@ -218,10 +220,22 @@ export default function AdminDashboard() {
         {/* Orders Tab */}
         {activeTab === 'orders' && (
           <div className="bg-gray-800/50 rounded-xl border border-gray-700 overflow-hidden">
+            {/* Search Bar */}
+            <div className="p-4 border-b border-gray-700 dark:border-gray-700 light:border-gray-200">
+              <input
+                type="text"
+                placeholder="Search by Order ID or Transaction ID..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900 placeholder-gray-400 dark:placeholder-gray-400 light:placeholder-gray-500"
+              />
+            </div>
+
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-800 border-b border-gray-700">
                   <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Order ID</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Customer</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Product</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Payment</th>
@@ -231,8 +245,17 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order) => (
+                  {orders
+                    .filter(order => 
+                      searchQuery === '' ||
+                      order.orderId.toString().includes(searchQuery) ||
+                      order.transactionId.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .map((order) => (
                     <tr key={order.id} className="border-b border-gray-700/50 hover:bg-gray-800/30">
+                      <td className="px-6 py-4">
+                        <span className="font-mono font-semibold text-primary">#{order.orderId}</span>
+                      </td>
                       <td className="px-6 py-4">
                         <div>
                           <p className="font-semibold">{order.fullName}</p>

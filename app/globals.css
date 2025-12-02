@@ -37,35 +37,52 @@ body {
   
   /* Light mode backgrounds */
   .light .bg-gray-800 {
-    @apply bg-white;
+    @apply bg-white !important;
   }
   
   .light .bg-gray-900 {
-    @apply bg-gray-50;
+    @apply bg-gray-50 !important;
   }
   
   .light .bg-gray-800\/50 {
-    @apply bg-white/80;
+    @apply bg-white/80 !important;
   }
   
   .light .bg-gray-800\/30 {
-    @apply bg-gray-100/80;
+    @apply bg-gray-100/80 !important;
   }
 
   .light .bg-gray-700 {
-    @apply bg-gray-200;
+    @apply bg-gray-200 !important;
+  }
+  
+  .light .bg-gray-700\/50 {
+    @apply bg-gray-100 !important;
   }
   
   /* Light mode borders */
   .light .border-gray-700 {
-    @apply border-gray-300;
+    @apply border-gray-300 !important;
   }
   
   .light .border-gray-800 {
-    @apply border-gray-200;
+    @apply border-gray-200 !important;
   }
 
   .light .border-gray-700\/50 {
-    @apply border-gray-200;
+    @apply border-gray-200 !important;
+  }
+  
+  /* Light mode input and textarea text visibility */
+  .light input,
+  .light textarea,
+  .light select {
+    @apply text-gray-900 !important;
+  }
+  
+  /* Light mode placeholder text */
+  .light input::placeholder,
+  .light textarea::placeholder {
+    @apply text-gray-500 !important;
   }
 }
