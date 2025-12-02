@@ -73,7 +73,7 @@ export default function AdminLogin() {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
                 className="w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 light:bg-gray-50 border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors text-white dark:text-white light:text-gray-900"
-                placeholder="fahimsifat12345@gmail.com"
+                placeholder="Enter admin email"
               />
             </div>
 
