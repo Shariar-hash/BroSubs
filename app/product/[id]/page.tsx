@@ -187,18 +187,22 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4">Key Features</h2>
               <ul className="space-y-3">
-                {product.features.map((feature, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-start space-x-3"
-                  >
-                    <Check className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-300">{feature}</span>
-                  </motion.li>
-                ))}
+                {product.features && product.features.length > 0 ? (
+                  product.features.map((feature, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-start space-x-3"
+                    >
+                      <Check className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-300">{feature}</span>
+                    </motion.li>
+                  ))
+                ) : (
+                  <li className="text-gray-400">No features listed</li>
+                )}
               </ul>
             </div>
 
@@ -221,11 +225,15 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               onClick={() => setShowPurchaseForm(true)}
               className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-2xl"
             >
-              Buy Now - ৳{product.price} <span className="line-through text-sm opacity-75 ml-2">৳{Math.round(product.price * 1.25)}</span>
+              Buy Now - ৳{product.price} {product.originalPrice && (
+                <span className="line-through text-sm opacity-75 ml-2">৳{product.originalPrice}</span>
+              )}
             </button>
-            <p className="text-center text-sm text-green-500 font-semibold mt-2">
-              🎉 Limited Time Offer - Save 20% Today!
-            </p>
+            {product.originalPrice && (
+              <p className="text-center text-sm text-green-500 font-semibold mt-2">
+                🎉 Limited Time Offer - Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% Today!
+              </p>
+            )}
 
             {/* FAQ */}
             <div className="mt-8 bg-gray-800/30 rounded-xl p-6 border border-gray-700">

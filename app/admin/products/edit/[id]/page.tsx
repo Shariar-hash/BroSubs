@@ -188,9 +188,19 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary transition-colors"
               >
                 <option value="AI Tools">AI Tools</option>
-                <option value="Storage">Storage</option>
+                <option value="AI - Chatbot">AI - Chatbot</option>
+                <option value="AI - Image Generation">AI - Image Generation</option>
+                <option value="AI - Code Assistant">AI - Code Assistant</option>
+                <option value="AI - Research">AI - Research</option>
+                <option value="Cloud Storage">Cloud Storage</option>
                 <option value="Productivity">Productivity</option>
                 <option value="Design">Design</option>
+                <option value="Video Editing">Video Editing</option>
+                <option value="Music & Audio">Music & Audio</option>
+                <option value="Development Tools">Development Tools</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Education">Education</option>
+                <option value="VPN & Security">VPN & Security</option>
                 <option value="Other">Other</option>
               </select>
             </div>
