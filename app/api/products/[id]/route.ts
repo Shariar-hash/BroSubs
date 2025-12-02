@@ -28,7 +28,19 @@ export async function PUT(
 ) {
   try {
     const body = await request.json()
-    const { name, description, features, price, category, status, image } = body
+    const { 
+      name, 
+      description, 
+      features, 
+      price, 
+      originalPrice,
+      duration,
+      category, 
+      status, 
+      image,
+      isFeatured,
+      discountEndTime
+    } = body
 
     const product = await prisma.product.update({
       where: { id: params.id },
@@ -37,14 +49,19 @@ export async function PUT(
         description,
         features,
         price: parseFloat(price),
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+        duration: duration || null,
         category,
         status,
-        image,
+        image: image || null,
+        isFeatured: isFeatured || false,
+        discountEndTime: discountEndTime ? new Date(discountEndTime) : null,
       }
     })
 
     return NextResponse.json(product)
   } catch (error) {
+    console.error('Product update error:', error)
     return NextResponse.json({ error: 'Failed to update product' }, { status: 500 })
   }
 }

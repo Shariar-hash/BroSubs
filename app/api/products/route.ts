@@ -17,7 +17,19 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, description, features, price, category, status, image } = body
+    const { 
+      name, 
+      description, 
+      features, 
+      price, 
+      originalPrice,
+      duration,
+      category, 
+      status, 
+      image,
+      isFeatured,
+      discountEndTime
+    } = body
 
     const product = await prisma.product.create({
       data: {
@@ -25,14 +37,19 @@ export async function POST(request: Request) {
         description,
         features,
         price: parseFloat(price),
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+        duration: duration || null,
         category,
         status: status || 'active',
-        image,
+        image: image || null,
+        isFeatured: isFeatured || false,
+        discountEndTime: discountEndTime ? new Date(discountEndTime) : null,
       }
     })
 
     return NextResponse.json(product, { status: 201 })
   } catch (error) {
+    console.error('Product creation error:', error)
     return NextResponse.json({ error: 'Failed to create product' }, { status: 500 })
   }
 }
